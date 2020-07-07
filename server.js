@@ -4,6 +4,7 @@ const morgan = require("morgan")
 const yup = require("yup")
 const monk = require("monk")
 const { nanoid } = require("nanoid")
+const cors = require("cors")
 require("dotenv").config()
 
 const app = express()
@@ -12,10 +13,13 @@ app.enable('trust proxy');
 app.use(helmet());
 app.use(morgan('common'));
 app.use(express.json());
+app.use(cors())
 
 const db = monk(process.env.MONGODB_URI)
 const urls = db.get("urls")
 urls.createIndex({ slug: 1 }, { unique: true });
+
+const notFoundPath = "../../public"
 
 // schema for url 
 const schema = yup.object().shape({
