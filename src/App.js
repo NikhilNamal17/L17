@@ -8,11 +8,12 @@ function App() {
   const [slug, setSlug] = useState("")
   const [resUrl, setResUrl] = useState("")
   const [formVisible, setFormVisible] = useState(true)
-
+  const [errMsg, setError] = useState("")
 
   const onSubmit = async e => {
     e.preventDefault();
 
+    if (errMsg !== "") setError(null)
 
     try {
       const response = await fetch('https://l17.herokuapp.com/url', {
@@ -33,9 +34,19 @@ function App() {
         setFormVisible(false)
         setResUrl(`https://l17.herokuapp.com/${result.slug}`);
         console.log(resUrl)
+
+      }
+      else {
+        const result = await response.json();
+        setError(result.message)
+        console.log(result.message)
+
+
       }
     } catch (err) {
+      JSON.stringify(err)
       console.log(err)
+
     }
   }
 
@@ -54,6 +65,14 @@ function App() {
           <h1><span className="title-marvel">L</span> <span className="title-studios">17</span></h1>
 
         </div>
+
+        {errMsg ? (
+
+          <p className="error"> {errMsg}
+
+          </p>
+
+        ) : null}
 
 
 
@@ -85,6 +104,7 @@ function App() {
         }
 
         {resUrl ? (
+
           <p className="created"> Your short url: <a href={resUrl} >{resUrl}</a>
           </p>
         ) : null}

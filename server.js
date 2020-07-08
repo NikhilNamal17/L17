@@ -48,6 +48,10 @@ app.post("/url", async (req, res, next) => {
             slug,
             url
         })
+        if (url.includes('l17.netlify.app')) {
+            throw new Error('Stop it. ??');
+        }
+
 
         if (!slug) {
             slug = nanoid(5)    //if slug doesn't exist, nanoid creates a random 5 digit slug
@@ -55,7 +59,7 @@ app.post("/url", async (req, res, next) => {
         } else {
             const existing = await urls.findOne({ slug });  //check if slug is already present in db
             if (existing) {
-                throw new Error('Slug in use. 🍔');
+                throw new Error('Alias in use. ??');
             }
         }
         slug = slug.toLowerCase();   //slug to lowercase for security measures 
@@ -72,17 +76,17 @@ app.post("/url", async (req, res, next) => {
     }
 })
 
-app.use((error, rer, res) => {
+app.use((error, req, res, next) => {
     if (error.status) {
-        res.status(error.status)
+        res.status(error.status);
     } else {
-        res.status(500)
+        res.status(500).json({
+            message: error.message,
+            stack: process.env.NODE_ENV === 'production' ? '??' : error.stack
+        });
     }
-    res.json({
-        message: error.message,
-        stack: process.env.NODE_ENV === "production" ? "🍔" : error.stack
-    })
-})
+});
 
 
-app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
+
+app.listen(process.env.PORT || 8000, () => console.log(`Listening on port ${process.env.PORT || 8000}!`));

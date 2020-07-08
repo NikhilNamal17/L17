@@ -143,6 +143,14 @@ a {
   margin: 0 5rem
 }
 
+.error {
+  background: #A63446;
+  padding: 0.5rem 1rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
 @media only screen and (max-device-width: 600px) {
   .form {
     margin: 0 2rem;
